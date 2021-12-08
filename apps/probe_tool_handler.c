@@ -6,7 +6,7 @@
  *   文件名称：probe_tool_handler.c
  *   创 建 者：肖飞
  *   创建日期：2020年03月20日 星期五 12时48分07秒
- *   修改日期：2021年12月02日 星期四 15时32分30秒
+ *   修改日期：2021年12月08日 星期三 11时33分02秒
  *   描    述：
  *
  *================================================================*/
@@ -508,8 +508,22 @@ static void fn14(request_t *request)
 		OS_ASSERT(channel_event != NULL);
 		OS_ASSERT(channels_event != NULL);
 
-		channel_info->channel_event_start_display.charge_mode = CHANNEL_RECORD_CHARGE_MODE_UNLIMIT;
-		channel_info->channel_event_start_display.start_reason = CHANNEL_RECORD_ITEM_START_REASON_BMS;
+		switch(type) {
+			case CHANNEL_EVENT_TYPE_START_CHANNEL: {
+				channel_info->channel_event_start_display.charge_mode = CHANNEL_RECORD_CHARGE_MODE_UNLIMIT;
+				channel_info->channel_event_start_display.start_reason = CHANNEL_RECORD_ITEM_START_REASON_BMS;
+			}
+			break;
+
+			case CHANNEL_EVENT_TYPE_STOP_CHANNEL: {
+				channel_info->channel_event_stop.stop_reason = CHANNEL_RECORD_ITEM_STOP_REASON_MANUAL;
+			}
+			break;
+
+			default: {
+			}
+			break;
+		}
 
 		channel_event->channel_id = channel_id;
 		channel_event->type = type;

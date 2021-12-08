@@ -6,12 +6,13 @@
  *   文件名称：channels_config.c
  *   创 建 者：肖飞
  *   创建日期：2021年01月18日 星期一 09时26分44秒
- *   修改日期：2021年12月07日 星期二 13时40分37秒
+ *   修改日期：2021年12月08日 星期三 13时39分22秒
  *   描    述：
  *
  *================================================================*/
 #include "channels_config.h"
 #include "os_utils.h"
+#include "power_modules.h"
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
@@ -47,6 +48,7 @@ char *get_channel_config_charger_bms_type_des(channel_charger_bms_type_t type)
 			add_des_case(CHANNEL_CHARGER_BMS_TYPE_NONE);
 			add_des_case(CHANNEL_CHARGER_BMS_TYPE_GB);
 			add_des_case(CHANNEL_CHARGER_BMS_TYPE_AC);
+			add_des_case(CHANNEL_CHARGER_BMS_TYPE_LAMP);
 
 		default: {
 		}
@@ -148,8 +150,7 @@ static function_board_config_item_t *function_board_config_item_0_sz[] = {
 static channel_config_t channel0_config = {
 	.channel_type = CHANNEL_TYPE_NATIVE,
 	.charger_config = {
-		.charger_type = CHANNEL_CHARGER_BMS_TYPE_GB,
-		.hcan_bms = &hcan2,
+		.charger_type = CHANNEL_CHARGER_BMS_TYPE_LAMP,
 	},
 	.energy_meter_config = {
 		.default_type = ENERGY_METER_TYPE_NONE,
@@ -163,51 +164,8 @@ static channel_config_t channel0_config = {
 	},
 };
 
-//static channel_config_t channel1_config = {
-//	.channel_type = CHANNEL_TYPE_PROXY_REMOTE,
-//};
-
-//static energy_meter_config_item_t energy_meter_config_item_2_0 = {
-//	.type = ENERGY_METER_TYPE_DC,
-//	.huart = &huart3,
-//};
-//
-//static energy_meter_config_item_t *energy_meter_config_item_2_sz[] = {
-//	&energy_meter_config_item_2_0,
-//};
-//
-//static function_board_config_item_t function_board_config_item_2_0 = {
-//	.type = FUNCTION_BOARD_TYPE_485,
-//	.huart = &huart3,
-//};
-//
-//static function_board_config_item_t *function_board_config_item_2_sz[] = {
-//	&function_board_config_item_2_0,
-//};
-//
-//
-//static channel_config_t channel2_config = {
-//	.channel_type = CHANNEL_TYPE_PROXY_LOCAL,
-//	.charger_config = {
-//		.charger_type = CHANNEL_CHARGER_BMS_TYPE_GB,
-//		.hcan_bms = &hcan2,
-//	},
-//	.energy_meter_config = {
-//		.default_type = ENERGY_METER_TYPE_DC,
-//		.size = ARRAY_SIZE(energy_meter_config_item_2_sz),
-//		.items = energy_meter_config_item_2_sz,
-//	},
-//	.function_board_config = {
-//		.default_type = FUNCTION_BOARD_TYPE_485,
-//		.size = ARRAY_SIZE(function_board_config_item_2_sz),
-//		.items = function_board_config_item_2_sz,
-//	},
-//};
-
 static channel_config_t *channel_config_sz[] = {
 	&channel0_config,
-	//&channel1_config,
-	//&channel2_config,
 };
 
 //static card_reader_config_item_t card_reader_config_item_0 = {
@@ -226,7 +184,7 @@ static card_reader_config_item_t *card_reader_config_item_sz[] = {
 
 power_manager_group_config_t power_manager_group_config_item_0 = {
 	.channel_number = ARRAY_SIZE(channel_config_sz),
-	.power_module_group_number = 8,
+	.power_module_group_number = 1,
 	.power_module_number_per_power_module_group = 1,
 };
 
@@ -239,9 +197,9 @@ static channels_config_t channels_config_0 = {
 	.channel_number = ARRAY_SIZE(channel_config_sz),
 	.channel_config = channel_config_sz,
 	.power_module_config = {
-		.channels_power_module_number = 8,
+		.power_module_number = 1,
 		.hcan = &hcan1,
-		.channels_power_module_type = CHANNELS_POWER_MODULE_TYPE_NATIVE,
+		.power_module_type = POWER_MODULE_TYPE_PSEUDO,
 	},
 	.voice_config = {
 
