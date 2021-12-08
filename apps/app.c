@@ -6,7 +6,7 @@
  *   文件名称：app.c
  *   创 建 者：肖飞
  *   创建日期：2019年10月11日 星期五 16时54分03秒
- *   修改日期：2021年12月06日 星期一 10时29分03秒
+ *   修改日期：2021年12月07日 星期二 12时31分52秒
  *   描    述：
  *
  *================================================================*/
@@ -279,13 +279,15 @@ void app(void const *argument)
 	display_info = (display_info_t *)channels_info->display_info;
 	OS_ASSERT(display_info != NULL);
 
-	app_info->display_data_invalid_callback_item.fn = app_mechine_info_invalid;
-	app_info->display_data_invalid_callback_item.fn_ctx = app_info;
-	OS_ASSERT(register_callback(display_info->modbus_slave_info->data_invalid_chain, &app_info->display_data_invalid_callback_item) == 0);
+	if(display_info->modbus_slave_info != NULL) {
+		app_info->display_data_invalid_callback_item.fn = app_mechine_info_invalid;
+		app_info->display_data_invalid_callback_item.fn_ctx = app_info;
+		OS_ASSERT(register_callback(display_info->modbus_slave_info->data_invalid_chain, &app_info->display_data_invalid_callback_item) == 0);
 
-	app_info->display_data_changed_callback_item.fn = app_mechine_info_changed;
-	app_info->display_data_changed_callback_item.fn_ctx = app_info;
-	OS_ASSERT(register_callback(display_info->modbus_slave_info->data_changed_chain, &app_info->display_data_changed_callback_item) == 0);
+		app_info->display_data_changed_callback_item.fn = app_mechine_info_changed;
+		app_info->display_data_changed_callback_item.fn_ctx = app_info;
+		OS_ASSERT(register_callback(display_info->modbus_slave_info->data_changed_chain, &app_info->display_data_changed_callback_item) == 0);
+	}
 
 	if(init_channels_notify_voice(channels_info) != 0) {
 		debug("");

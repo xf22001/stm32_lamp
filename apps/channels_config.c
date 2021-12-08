@@ -6,7 +6,7 @@
  *   文件名称：channels_config.c
  *   创 建 者：肖飞
  *   创建日期：2021年01月18日 星期一 09时26分44秒
- *   修改日期：2021年11月29日 星期一 14时19分24秒
+ *   修改日期：2021年12月07日 星期二 13时40分37秒
  *   描    述：
  *
  *================================================================*/
@@ -82,6 +82,7 @@ char *get_channel_config_function_board_type_des(function_board_type_t type)
 	char *des = "unknow";
 
 	switch(type) {
+			add_des_case(FUNCTION_BOARD_TYPE_NONE);
 			add_des_case(FUNCTION_BOARD_TYPE_485);
 			add_des_case(FUNCTION_BOARD_TYPE_MODBUS);
 
@@ -151,12 +152,12 @@ static channel_config_t channel0_config = {
 		.hcan_bms = &hcan2,
 	},
 	.energy_meter_config = {
-		.default_type = ENERGY_METER_TYPE_DC,
+		.default_type = ENERGY_METER_TYPE_NONE,
 		.size = ARRAY_SIZE(energy_meter_config_item_0_sz),
 		.items = energy_meter_config_item_0_sz,
 	},
 	.function_board_config = {
-		.default_type = FUNCTION_BOARD_TYPE_485,
+		.default_type = FUNCTION_BOARD_TYPE_NONE,
 		.size = ARRAY_SIZE(function_board_config_item_0_sz),
 		.items = function_board_config_item_0_sz,
 	},
@@ -251,7 +252,7 @@ static channels_config_t channels_config_0 = {
 		.items = card_reader_config_item_sz,
 	},
 	.display_config = {
-		.huart = &huart6,
+		//.huart = &huart6,
 	},
 	.proxy_channel_info = {
 		.hcan = &hcan1,
