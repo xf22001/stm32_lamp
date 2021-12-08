@@ -6,7 +6,7 @@
  *   文件名称：charger_bms_lamp.c
  *   创 建 者：肖飞
  *   创建日期：2021年06月19日 星期六 19时12分21秒
- *   修改日期：2021年12月08日 星期三 16时28分30秒
+ *   修改日期：2021年12月08日 星期三 17时25分25秒
  *   描    述：
  *
  *================================================================*/
@@ -92,8 +92,7 @@ static led_relay_info_t *get_led_relay_info_by_id(uint8_t id)
 }
 
 typedef struct {
-	uint8_t state;
-	uint32_t state_stamps;
+	uint32_t adhesion_stamps;
 	bitmap_t *led_config_map;
 	bitmap_t *led_action_map;
 } charger_bms_ctx_t;
@@ -175,6 +174,43 @@ static void action_led_relay(charger_info_t *charger_info)
 	}
 }
 
+static void led_relay_adhesion_detect(charger_info_t *charger_info)
+{
+	charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
+	channel_info_t *channel_info = charger_info->channel_info;
+	int i;
+	uint8_t adhesion = 0;
+	uint8_t fault = 0;
+	uint32_t ticks = osKernelSysTick();
+
+	for(i = 0; i < LAMP_LED_SIZE; i++) {
+		led_relay_info_t *led_relay_info = get_led_relay_info_by_id(i);
+
+		OS_ASSERT(led_relay_info != NULL);
+
+		if(HAL_GPIO_ReadPin(led_relay_info->gpio_port_fb, led_relay_info->gpio_pin_fb) == GPIO_PIN_SET) {
+			adhesion = 1;
+			break;
+		}
+	}
+
+	if(adhesion == 0) {
+		charger_bms_ctx->adhesion_stamps = ticks;
+	}
+
+	if(ticks_duration(ticks, charger_bms_ctx->adhesion_stamps) >= 1000) {
+		fault = 1;
+	}
+
+	if(get_fault(channel_info->faults, CHANNEL_FAULT_ADHESION_P) != fault) {
+		set_fault(channel_info->faults, CHANNEL_FAULT_ADHESION_P, fault);
+	}
+
+	if(get_fault(channel_info->faults, CHANNEL_FAULT_ADHESION_N) != fault) {
+		set_fault(channel_info->faults, CHANNEL_FAULT_ADHESION_N, fault);
+	}
+}
+
 typedef enum {
 	CHARGER_BMS_STATE_IDLE = 0,
 	CHARGER_BMS_STATE_STARTING,
@@ -185,7 +221,11 @@ typedef enum {
 static int prepare_bms_state_idle(void *_charger_info)
 {
 	int ret = 0;
-	//charger_info_t *charger_info = (charger_info_t *)_charger_info;
+	charger_info_t *charger_info = (charger_info_t *)_charger_info;
+	charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
+	uint32_t ticks = osKernelSysTick();
+
+	charger_bms_ctx->adhesion_stamps = ticks;
 
 	return ret;
 }
@@ -195,7 +235,6 @@ static int handle_request_bms_state_idle(void *_charger_info)
 	int ret = 0;
 
 	charger_info_t *charger_info = (charger_info_t *)_charger_info;
-	//channel_info_t *channel_info = charger_info->channel_info;
 
 	if(charger_info->charger_bms_request_action == CHARGER_BMS_REQUEST_ACTION_START) {
 		charger_info->charger_bms_request_action = CHARGER_BMS_REQUEST_ACTION_NONE;
@@ -203,16 +242,16 @@ static int handle_request_bms_state_idle(void *_charger_info)
 		set_charger_bms_request_state(charger_info, CHARGER_BMS_STATE_STARTING);
 	}
 
+	led_relay_adhesion_detect(charger_info);
+
 	return ret;
 }
 
 static int prepare_bms_state_starting(void *_charger_info)
 {
 	int ret = 0;
-	charger_info_t *charger_info = (charger_info_t *)_charger_info;
-	charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
-
-	charger_bms_ctx->state = 0;
+	//charger_info_t *charger_info = (charger_info_t *)_charger_info;
+	//charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
 
 	return ret;
 }
@@ -278,12 +317,10 @@ static int prepare_bms_state_stopping(void *_charger_info)
 	int ret = 0;
 	charger_info_t *charger_info = (charger_info_t *)_charger_info;
 	channel_info_t *channel_info = charger_info->channel_info;
-	charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
+	//charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
 	channel_request_end(channel_info);
 	clean_led_relay_config(charger_info);
 	action_led_relay(charger_info);
-
-	charger_bms_ctx->state = 0;
 
 	return ret;
 }
