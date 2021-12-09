@@ -6,7 +6,7 @@
 #   文件名称：user.mk
 #   创 建 者：肖飞
 #   创建日期：2019年10月25日 星期五 13时04分38秒
-#   修改日期：2021年12月08日 星期三 15时09分18秒
+#   修改日期：2021年12月09日 星期四 10时05分59秒
 #   描    述：
 #
 #================================================================
@@ -127,9 +127,11 @@ endif
 ifneq ($(call ifdef_any_of,CHARGER_BMS_HANDLER_AC),)
 USER_C_SOURCES += apps/modules/app/charger/charger_bms_ac.c
 endif
-ifneq ($(call ifdef_any_of,CHARGER_BMS_HANDLER_LAMP),)
-#USER_C_SOURCES += apps/modules/app/charger/charger_bms_lamp.c
-USER_C_SOURCES += apps/charger_bms_lamp.c
+ifneq ($(call ifdef_any_of,CHARGER_BMS_HANDLER_NOBMS),)
+USER_C_SOURCES += apps/modules/app/charger/charger_bms_nobms.c
+endif
+ifneq ($(call ifdef_any_of,CHARGER_BMS_HANDLER_CUSTOM),)
+USER_C_SOURCES += apps/charger_bms_custom.c
 endif
 USER_C_SOURCES += apps/modules/app/charger/power_manager.c
 USER_C_SOURCES += apps/modules/app/charger/power_manager_handler_native.c

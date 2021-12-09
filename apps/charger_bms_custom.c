@@ -3,14 +3,14 @@
 /*================================================================
  *
  *
- *   文件名称：charger_bms_lamp.c
+ *   文件名称：charger_bms_custom.c
  *   创 建 者：肖飞
  *   创建日期：2021年06月19日 星期六 19时12分21秒
- *   修改日期：2021年12月08日 星期三 17时25分25秒
+ *   修改日期：2021年12月09日 星期四 10时03分08秒
  *   描    述：
  *
  *================================================================*/
-#include "charger_bms_lamp.h"
+#include "charger_bms_custom.h"
 
 #include "channel.h"
 #include "charger_bms.h"
@@ -20,11 +20,11 @@
 #include "log.h"
 
 typedef enum {
-	LAMP_LED_0 = 0,
-	LAMP_LED_1,
-	LAMP_LED_2,
-	LAMP_LED_SIZE
-} lamp_led_t;
+	CUSTOM_LED_0 = 0,
+	CUSTOM_LED_1,
+	CUSTOM_LED_2,
+	CUSTOM_LED_SIZE
+} custom_led_t;
 
 typedef struct {
 	uint8_t id;
@@ -35,7 +35,7 @@ typedef struct {
 } led_relay_info_t;
 
 led_relay_info_t led_relay_info_0 = {
-	.id = LAMP_LED_0,
+	.id = CUSTOM_LED_0,
 	.gpio_port = relay_8_GPIO_Port,
 	.gpio_pin = relay_8_Pin,
 	.gpio_port_fb = in_5_GPIO_Port,
@@ -43,7 +43,7 @@ led_relay_info_t led_relay_info_0 = {
 };
 
 led_relay_info_t led_relay_info_1 = {
-	.id = LAMP_LED_1,
+	.id = CUSTOM_LED_1,
 	.gpio_port = relay_4_GPIO_Port,
 	.gpio_pin = relay_4_Pin,
 	.gpio_port_fb = in_5_GPIO_Port,
@@ -51,7 +51,7 @@ led_relay_info_t led_relay_info_1 = {
 };
 
 led_relay_info_t led_relay_info_2 = {
-	.id = LAMP_LED_2,
+	.id = CUSTOM_LED_2,
 	.gpio_port = out_7_GPIO_Port,
 	.gpio_pin = out_7_Pin,
 	.gpio_port_fb = in_5_GPIO_Port,
@@ -107,7 +107,7 @@ void set_channel_led_onoff(channel_info_t *channel_info, uint8_t id, uint8_t ono
 	uint8_t type;
 	int i;
 
-	if(id >= LAMP_LED_SIZE) {
+	if(id >= CUSTOM_LED_SIZE) {
 		debug("id:%d invalid!", id);
 		return;
 	}
@@ -183,7 +183,7 @@ static void led_relay_adhesion_detect(charger_info_t *charger_info)
 	uint8_t fault = 0;
 	uint32_t ticks = osKernelSysTick();
 
-	for(i = 0; i < LAMP_LED_SIZE; i++) {
+	for(i = 0; i < CUSTOM_LED_SIZE; i++) {
 		led_relay_info_t *led_relay_info = get_led_relay_info_by_id(i);
 
 		OS_ASSERT(led_relay_info != NULL);
@@ -474,7 +474,7 @@ static void modify_valid_time(void)
 	set_time(ts);
 }
 
-static int init_lamp(void *_charger_info)
+static int init_custom(void *_charger_info)
 {
 	int ret = 0;
 	charger_info_t *charger_info = (charger_info_t *)_charger_info;
@@ -486,9 +486,9 @@ static int init_lamp(void *_charger_info)
 	OS_ASSERT(charger_info->charger_bms_ctx == NULL);
 	charger_info->charger_bms_ctx = charger_bms_ctx;
 
-	charger_bms_ctx->led_config_map = alloc_bitmap(LAMP_LED_SIZE);
+	charger_bms_ctx->led_config_map = alloc_bitmap(CUSTOM_LED_SIZE);
 	OS_ASSERT(charger_bms_ctx->led_config_map != NULL);
-	charger_bms_ctx->led_action_map = alloc_bitmap(LAMP_LED_SIZE);
+	charger_bms_ctx->led_action_map = alloc_bitmap(CUSTOM_LED_SIZE);
 	OS_ASSERT(charger_bms_ctx->led_action_map != NULL);
 
 	charger_info->charger_bms_state_handler = NULL;
@@ -504,7 +504,7 @@ static int init_lamp(void *_charger_info)
 	return ret;
 }
 
-static int deinit_lamp(void *_charger_info)
+static int deinit_custom(void *_charger_info)
 {
 	int ret = 0;
 	charger_info_t *charger_info = (charger_info_t *)_charger_info;
@@ -522,8 +522,8 @@ static int deinit_lamp(void *_charger_info)
 	return ret;
 }
 
-charger_bms_handler_t charger_bms_handler_lamp = {
-	.charger_type = CHANNEL_CHARGER_BMS_TYPE_LAMP,
-	.init = init_lamp,
-	.deinit = deinit_lamp,
+charger_bms_handler_t charger_bms_handler_custom = {
+	.charger_type = CHANNEL_CHARGER_BMS_TYPE_CUSTOM,
+	.init = init_custom,
+	.deinit = deinit_custom,
 };
