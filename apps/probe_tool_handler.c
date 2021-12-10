@@ -6,7 +6,7 @@
  *   文件名称：probe_tool_handler.c
  *   创 建 者：肖飞
  *   创建日期：2020年03月20日 星期五 12时48分07秒
- *   修改日期：2021年12月08日 星期三 16时23分29秒
+ *   修改日期：2021年12月10日 星期五 16时29分00秒
  *   描    述：
  *
  *================================================================*/
@@ -447,7 +447,7 @@ static void fn13(request_t *request)
 	int fn;
 	int catched;
 	int ret;
-	struct tm tm;
+	struct tm tm = {0};
 	time_t ts;
 
 	ret = sscanf(content, "%d %04d%02d%02d%02d%02d%02d %n",

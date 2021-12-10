@@ -6,7 +6,7 @@
  *   文件名称：charger_bms_custom.c
  *   创 建 者：肖飞
  *   创建日期：2021年06月19日 星期六 19时12分21秒
- *   修改日期：2021年12月09日 星期四 10时03分08秒
+ *   修改日期：2021年12月10日 星期五 16时30分26秒
  *   描    述：
  *
  *================================================================*/
@@ -460,7 +460,7 @@ static void charger_bms_periodic(void *_charger_info, void *_channels_info)
 
 static void modify_valid_time(void)
 {
-	struct tm tm;
+	struct tm tm = {0};
 	time_t ts;
 
 	tm.tm_year = 2021 - 1900;
