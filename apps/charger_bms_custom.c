@@ -6,7 +6,7 @@
  *   文件名称：charger_bms_custom.c
  *   创 建 者：肖飞
  *   创建日期：2021年06月19日 星期六 19时12分21秒
- *   修改日期：2021年12月10日 星期五 16时30分26秒
+ *   修改日期：2021年12月10日 星期五 17时30分10秒
  *   描    述：
  *
  *================================================================*/
@@ -148,7 +148,7 @@ void set_channel_led_onoff(channel_info_t *channel_info, uint8_t id, uint8_t ono
 static void clean_led_relay_config(charger_info_t *charger_info)
 {
 	charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
-	memset(charger_bms_ctx->led_action_map->data, 0, charger_bms_ctx->led_action_map->cell_size);
+	memset(charger_bms_ctx->led_config_map->data, 0, charger_bms_ctx->led_config_map->cell_size);
 }
 
 static void action_led_relay(charger_info_t *charger_info)
