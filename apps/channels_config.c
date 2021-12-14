@@ -6,7 +6,7 @@
  *   文件名称：channels_config.c
  *   创 建 者：肖飞
  *   创建日期：2021年01月18日 星期一 09时26分44秒
- *   修改日期：2021年12月10日 星期五 16时19分24秒
+ *   修改日期：2021年12月13日 星期一 15时01分39秒
  *   描    述：
  *
  *================================================================*/
@@ -230,6 +230,8 @@ static channels_config_t channels_config_0 = {
 	.door_port = in_2_GPIO_Port,
 	.door_pin = in_2_Pin,
 	.door_normal_state = GPIO_PIN_RESET,
+	.fault_port = relay_2_GPIO_Port,
+	.fault_pin = relay_2_Pin,
 };
 
 static channels_config_t *channels_config_sz[] = {

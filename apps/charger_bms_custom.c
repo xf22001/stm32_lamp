@@ -6,7 +6,7 @@
  *   文件名称：charger_bms_custom.c
  *   创 建 者：肖飞
  *   创建日期：2021年06月19日 星期六 19时12分21秒
- *   修改日期：2021年12月10日 星期五 17时30分10秒
+ *   修改日期：2021年12月13日 星期一 10时31分38秒
  *   描    述：
  *
  *================================================================*/
@@ -96,6 +96,16 @@ typedef struct {
 	bitmap_t *led_config_map;
 	bitmap_t *led_action_map;
 } charger_bms_ctx_t;
+
+int get_channel_led_state(channel_info_t *channel_info, uint8_t id)
+{
+	charger_info_t *charger_info = (charger_info_t *)channel_info->charger_info;
+	charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
+
+	OS_ASSERT(charger_bms_ctx != NULL);
+
+	return get_bitmap_value(charger_bms_ctx->led_config_map, id);
+}
 
 void set_channel_led_onoff(channel_info_t *channel_info, uint8_t id, uint8_t onoff)
 {
