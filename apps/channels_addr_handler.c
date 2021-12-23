@@ -6,7 +6,7 @@
  *   文件名称：channels_addr_handler.c
  *   创 建 者：肖飞
  *   创建日期：2021年07月16日 星期五 14时03分28秒
- *   修改日期：2021年12月13日 星期一 10时57分27秒
+ *   修改日期：2021年12月23日 星期四 13时20分51秒
  *   描    述：
  *
  *================================================================*/
@@ -104,6 +104,60 @@ void channels_modbus_data_action(void *fn_ctx, void *chain_ctx)
 				modbus_data_ctx->value = get_channel_led_state(channel_info, index);
 			} else if(modbus_data_ctx->action == MODBUS_DATA_ACTION_SET) {
 				set_channel_led_onoff(channel_info, index, modbus_data_ctx->value);
+			}
+		}
+		break;
+
+		case 107: {//总灯开关 1-on
+			uint8_t channel_id = 0;
+			int i;
+			channel_info_t *channel_info = channels_info->channel_info + channel_id;
+
+			if(modbus_data_ctx->action == MODBUS_DATA_ACTION_GET) {
+				uint8_t value = 1;
+
+				for(i = 0; i < 3; i++) {
+					if(get_channel_led_state(channel_info, i) == 0) {
+						value = 0;
+						break;
+					}
+				}
+
+				//所有灯状态1, 返回1
+				modbus_data_ctx->value = value;
+			} else if(modbus_data_ctx->action == MODBUS_DATA_ACTION_SET) {
+				if(modbus_data_ctx->value == 1) {
+					for(i = 0; i < 3; i++) {
+						set_channel_led_onoff(channel_info, i, 1);
+					}
+				}
+			}
+		}
+		break;
+
+		case 108: {//总灯开关 1-off
+			uint8_t channel_id = 0;
+			int i;
+			channel_info_t *channel_info = channels_info->channel_info + channel_id;
+
+			if(modbus_data_ctx->action == MODBUS_DATA_ACTION_GET) {
+				uint8_t value = 1;
+
+				for(i = 0; i < 3; i++) {
+					if(get_channel_led_state(channel_info, i) == 1) {
+						value = 0;
+						break;
+					}
+				}
+
+				//所有灯状态0, 返回1
+				modbus_data_ctx->value = value;
+			} else if(modbus_data_ctx->action == MODBUS_DATA_ACTION_SET) {
+				if(modbus_data_ctx->value == 1) {
+					for(i = 0; i < 3; i++) {
+						set_channel_led_onoff(channel_info, i, 0);
+					}
+				}
 			}
 		}
 		break;

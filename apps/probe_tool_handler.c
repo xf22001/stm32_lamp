@@ -6,7 +6,7 @@
  *   文件名称：probe_tool_handler.c
  *   创 建 者：肖飞
  *   创建日期：2020年03月20日 星期五 12时48分07秒
- *   修改日期：2021年12月10日 星期五 16时29分00秒
+ *   修改日期：2021年12月23日 星期四 13时22分01秒
  *   描    述：
  *
  *================================================================*/
@@ -681,6 +681,119 @@ static void fn19(request_t *request)
 	}
 }
 
+int get_channel_led_state(channel_info_t *channel_info, uint8_t id);
+static void fn20(request_t *request)
+{
+	char *content = (char *)(request + 1);
+	int fn;
+	int onoff;
+	int catched;
+	int ret;
+
+	ret = sscanf(content, "%d %d %n",
+	             &fn,
+	             &onoff,
+	             &catched);
+	debug("ret:%d", ret);
+
+	if(ret == 2) {
+		uint8_t channel_id = 0;
+		int i;
+		channels_info_t *channels_info = get_channels();
+		channel_info_t *channel_info = channels_info->channel_info + channel_id;
+
+		{
+			uint8_t value = 1;
+
+			for(i = 0; i < 3; i++) {
+				if(get_channel_led_state(channel_info, i) == 0) {
+					value = 0;
+					break;
+				}
+			}
+
+			//所有灯状态1, 返回1
+			debug("value:%d", value);
+		}
+
+		if(onoff != 0) {
+			for(i = 0; i < 3; i++) {
+				set_channel_led_onoff(channel_info, i, 1);
+			}
+		}
+
+		{
+			uint8_t value = 1;
+
+			for(i = 0; i < 3; i++) {
+				if(get_channel_led_state(channel_info, i) == 0) {
+					value = 0;
+					break;
+				}
+			}
+
+			//所有灯状态1, 返回1
+			debug("value:%d", value);
+		}
+	}
+}
+
+static void fn21(request_t *request)
+{
+	char *content = (char *)(request + 1);
+	int fn;
+	int onoff;
+	int catched;
+	int ret;
+
+	ret = sscanf(content, "%d %d %n",
+	             &fn,
+	             &onoff,
+	             &catched);
+	debug("ret:%d", ret);
+
+	if(ret == 2) {
+		uint8_t channel_id = 0;
+		int i;
+		channels_info_t *channels_info = get_channels();
+		channel_info_t *channel_info = channels_info->channel_info + channel_id;
+
+		{
+			uint8_t value = 1;
+
+			for(i = 0; i < 3; i++) {
+				if(get_channel_led_state(channel_info, i) == 1) {
+					value = 0;
+					break;
+				}
+			}
+
+			//所有灯状态0, 返回1
+			debug("value:%d", value);
+		}
+
+		if(onoff != 0) {
+			for(i = 0; i < 3; i++) {
+				set_channel_led_onoff(channel_info, i, 0);
+			}
+		}
+
+		{
+			uint8_t value = 1;
+
+			for(i = 0; i < 3; i++) {
+				if(get_channel_led_state(channel_info, i) == 1) {
+					value = 0;
+					break;
+				}
+			}
+
+			//所有灯状态0, 返回1
+			debug("value:%d", value);
+		}
+	}
+}
+
 static server_item_t server_map[] = {
 	{1, fn1},
 	{2, fn2},
@@ -701,6 +814,8 @@ static server_item_t server_map[] = {
 	{17, fn17},
 	{18, fn18},
 	{19, fn19},
+	{20, fn20},
+	{21, fn21},
 };
 
 server_map_info_t server_map_info = {

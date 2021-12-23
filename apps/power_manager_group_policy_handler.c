@@ -6,15 +6,39 @@
  *   文件名称：power_manager_group_policy_handler.c
  *   创 建 者：肖飞
  *   创建日期：2021年11月30日 星期二 15时07分16秒
- *   修改日期：2021年12月08日 星期三 14时14分09秒
+ *   修改日期：2021年12月23日 星期四 13时07分19秒
  *   描    述：
  *
  *================================================================*/
 #include "power_manager.h"
 
 #include "main.h"
+#include "channels.h"
 
 #include "log.h"
+
+void power_manager_restore_config(channels_info_t *channels_info)
+{
+	int i;
+	int j;
+
+	channels_config_t *channels_config = channels_info->channels_config;
+	channels_settings_t *channels_settings = &channels_info->channels_settings;
+	power_manager_settings_t *power_manager_settings = &channels_settings->power_manager_settings;
+
+	power_manager_settings->power_manager_group_number = 1;
+
+	for(i = 0; i < power_manager_settings->power_manager_group_number; i++) {
+		power_manager_group_settings_t *power_manager_group_settings = &power_manager_settings->power_manager_group_settings[i];
+		power_manager_group_settings->channel_number = channels_config->channel_number;
+		power_manager_group_settings->power_module_group_number = 1;
+
+		for(j = 0; j < power_manager_group_settings->power_module_group_number; j++) {
+			power_module_group_settings_t *power_module_group_settings = &power_manager_group_settings->power_module_group_settings[j];
+			power_module_group_settings->power_module_number = 1;
+		}
+	}
+}
 
 static int _init(void *_power_manager_info)
 {

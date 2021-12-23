@@ -121,6 +121,7 @@ char *get_power_manager_type_des(power_manager_type_t type)
 	char *des = "unknow";
 
 	switch(type) {
+			add_des_case(POWER_MANAGER_TYPE_NONE);
 			add_des_case(POWER_MANAGER_TYPE_NATIVE);
 
 		default: {
@@ -184,24 +185,17 @@ static card_reader_config_item_t *card_reader_config_item_sz[] = {
 	&card_reader_config_item_0,
 };
 
-power_manager_group_config_t power_manager_group_config_item_0 = {
-	.channel_number = ARRAY_SIZE(channel_config_sz),
-	.power_module_group_number = 1,
-	.power_module_number_per_power_module_group = 1,
-};
-
-static power_manager_group_config_t *power_manager_group_config_sz[] = {
-	&power_manager_group_config_item_0,
-};
-
 static channels_config_t channels_config_0 = {
 	.id = 0,
 	.channel_number = ARRAY_SIZE(channel_config_sz),
 	.channel_config = channel_config_sz,
 	.power_module_config = {
-		.power_module_number = 1,
+		.power_module_number = 0,
 		.hcan = &hcan1,
-		.power_module_type = POWER_MODULE_TYPE_PSEUDO,
+		.power_module_default_type = POWER_MODULE_TYPE_PSEUDO,
+	},
+	.power_manager_config = {
+		.power_manager_default_type = POWER_MANAGER_TYPE_NATIVE,
 	},
 	.voice_config = {
 
@@ -216,11 +210,6 @@ static channels_config_t channels_config_0 = {
 	},
 	.proxy_channel_info = {
 		.hcan = &hcan1,
-	},
-	.power_manager_config = {
-		.type = POWER_MANAGER_TYPE_NATIVE,
-		.power_manager_group_number = ARRAY_SIZE(power_manager_group_config_sz),
-		.power_manager_group_config = power_manager_group_config_sz,
 	},
 	.board_temperature_adc = &hadc1,
 	.board_temperature_adc_rank = 0,
