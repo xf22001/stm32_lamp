@@ -6,7 +6,7 @@
  *   文件名称：channels_config.c
  *   创 建 者：肖飞
  *   创建日期：2021年01月18日 星期一 09时26分44秒
- *   修改日期：2021年12月13日 星期一 15时01分39秒
+ *   修改日期：2021年12月28日 星期二 15时20分56秒
  *   描    述：
  *
  *================================================================*/
@@ -17,6 +17,7 @@
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
+extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
@@ -206,7 +207,7 @@ static channels_config_t channels_config_0 = {
 		.items = card_reader_config_item_sz,
 	},
 	.display_config = {
-		//.huart = &huart6,
+		.huart = &huart1,
 	},
 	.proxy_channel_info = {
 		.hcan = &hcan1,

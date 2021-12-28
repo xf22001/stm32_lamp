@@ -6,7 +6,7 @@
  *   文件名称：app.c
  *   创 建 者：肖飞
  *   创建日期：2019年10月11日 星期五 16时54分03秒
- *   修改日期：2021年12月07日 星期二 12时31分52秒
+ *   修改日期：2021年12月28日 星期二 16时40分51秒
  *   描    述：
  *
  *================================================================*/
@@ -220,25 +220,26 @@ void app(void const *argument)
 	ret = app_load_config();
 
 	if(ret == 0) {
+		debug("app_load_config successful!");
 		reset_config = app_info->mechine_info.reset_config;
 
 		if(app_get_reset_config() != 0) {
 			ret = -1;
 		}
+	} else {
+		debug("app_load_config failed!");
 	}
 
 	if(ret == 0) {
-		debug("app_load_config successful!");
 		debug("device id:\'%s\', server uri:\'%s\'!", app_info->mechine_info.device_id, app_info->mechine_info.uri);
 	} else {
-		debug("app_load_config failed!");
 		snprintf(app_info->mechine_info.device_id, sizeof(app_info->mechine_info.device_id), "%s", "0000000000");
 		snprintf(app_info->mechine_info.uri, sizeof(app_info->mechine_info.uri), "%s", "tcp://112.74.40.227:12345");
 		debug("device id:\'%s\', server uri:\'%s\'!", app_info->mechine_info.device_id, app_info->mechine_info.uri);
 		snprintf(app_info->mechine_info.ip, sizeof(app_info->mechine_info.ip), "%d.%d.%d.%d", 10, 42, 0, 122);
 		snprintf(app_info->mechine_info.sn, sizeof(app_info->mechine_info.sn), "%d.%d.%d.%d", 255, 255, 255, 0);
 		snprintf(app_info->mechine_info.gw, sizeof(app_info->mechine_info.gw), "%d.%d.%d.%d", 10, 42, 0, 1);
-		app_info->mechine_info.dhcp_enable = 0;
+		app_info->mechine_info.dhcp_enable = 1;
 		app_info->mechine_info.request_type = REQUEST_TYPE_SSE;
 		app_info->mechine_info.reset_config = 0;
 		app_save_config();
@@ -258,11 +259,11 @@ void app(void const *argument)
 		osDelay(1);
 	}
 
-	get_or_alloc_uart_debug_info(&huart1);
-	add_log_handler((log_fn_t)log_uart_data);
+	//get_or_alloc_uart_debug_info(&huart1);
+	//add_log_handler((log_fn_t)log_uart_data);
 
 	add_log_handler((log_fn_t)log_udp_data);
-	add_log_handler((log_fn_t)log_file_data);
+	//add_log_handler((log_fn_t)log_file_data);
 
 	debug("===========================================start app============================================");
 
@@ -273,7 +274,7 @@ void app(void const *argument)
 	channels_info = start_channels();
 	OS_ASSERT(channels_info != NULL);
 
-	net_client_add_poll_loop(poll_loop);
+	//net_client_add_poll_loop(poll_loop);
 	//ftp_client_add_poll_loop(poll_loop);
 
 	display_info = (display_info_t *)channels_info->display_info;
