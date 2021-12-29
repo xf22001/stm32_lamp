@@ -6,7 +6,7 @@
  *   文件名称：channels_addr_handler.c
  *   创 建 者：肖飞
  *   创建日期：2021年07月16日 星期五 14时03分28秒
- *   修改日期：2021年12月23日 星期四 13时20分51秒
+ *   修改日期：2021年12月29日 星期三 11时12分32秒
  *   描    述：
  *
  *================================================================*/
@@ -14,6 +14,7 @@
 #include "app.h"
 #include "channels.h"
 #include "display.h"
+#include "power_manager.h"
 
 #include "log.h"
 
@@ -57,15 +58,17 @@ void channels_modbus_data_action(void *fn_ctx, void *chain_ctx)
 
 		case 102: {//输出电压 0.1v
 			uint8_t channel_id = 0;
-			channel_info_t *channel_info = channels_info->channel_info + channel_id;
-			modbus_data_value_rw(modbus_data_ctx, channel_info->voltage);
+			power_manager_info_t *power_manager_info = channels_info->power_manager_info;
+			power_manager_channel_info_t *power_manager_channel_info = power_manager_info->power_manager_channel_info + channel_id;
+			modbus_data_value_r(modbus_data_ctx, power_manager_channel_info->status.charge_output_voltage_module);
 		}
 		break;
 
 		case 103: {//输出电流 0.1a
 			uint8_t channel_id = 0;
-			channel_info_t *channel_info = channels_info->channel_info + channel_id;
-			modbus_data_value_rw(modbus_data_ctx, channel_info->current);
+			power_manager_info_t *power_manager_info = channels_info->power_manager_info;
+			power_manager_channel_info_t *power_manager_channel_info = power_manager_info->power_manager_channel_info + channel_id;
+			modbus_data_value_r(modbus_data_ctx, power_manager_channel_info->status.charge_output_current_module);
 		}
 		break;
 

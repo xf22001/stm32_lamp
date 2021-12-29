@@ -6,7 +6,7 @@
  *   文件名称：charger_bms_custom.c
  *   创 建 者：肖飞
  *   创建日期：2021年06月19日 星期六 19时12分21秒
- *   修改日期：2021年12月13日 星期一 10时31分38秒
+ *   修改日期：2021年12月29日 星期三 14时41分36秒
  *   描    述：
  *
  *================================================================*/
@@ -342,7 +342,6 @@ static int handle_request_bms_state_stopping(void *_charger_info)
 	charger_info_t *charger_info = (charger_info_t *)_charger_info;
 	channel_info_t *channel_info = charger_info->channel_info;
 	//charger_bms_ctx_t *charger_bms_ctx = (charger_bms_ctx_t *)charger_info->charger_bms_ctx;
-	//uint32_t ticks = osKernelSysTick();
 
 	channel_request_idle(channel_info);
 	set_charger_bms_request_state(charger_info, CHARGER_BMS_STATE_IDLE);
@@ -508,6 +507,8 @@ static int init_custom(void *_charger_info)
 	charger_info->periodic_request_cb.fn = charger_bms_periodic;
 	charger_info->periodic_request_cb.fn_ctx = charger_info;
 	OS_ASSERT(register_callback(channels_info->common_periodic_chain, &charger_info->periodic_request_cb) == 0);
+
+	channels_info->channels_settings.module_max_output_voltage = 3000;
 
 	modify_valid_time();
 

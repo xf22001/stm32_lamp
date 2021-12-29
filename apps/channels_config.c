@@ -6,7 +6,7 @@
  *   文件名称：channels_config.c
  *   创 建 者：肖飞
  *   创建日期：2021年01月18日 星期一 09时26分44秒
- *   修改日期：2021年12月28日 星期二 15时20分56秒
+ *   修改日期：2021年12月29日 星期三 14时02分17秒
  *   描    述：
  *
  *================================================================*/
@@ -193,7 +193,7 @@ static channels_config_t channels_config_0 = {
 	.power_module_config = {
 		.power_module_number = 0,
 		.hcan = &hcan1,
-		.power_module_default_type = POWER_MODULE_TYPE_PSEUDO,
+		.power_module_default_type = POWER_MODULE_TYPE_WINLINE,
 	},
 	.power_manager_config = {
 		.power_manager_default_type = POWER_MANAGER_TYPE_NATIVE,
