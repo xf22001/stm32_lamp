@@ -6,7 +6,7 @@
  *   文件名称：app.c
  *   创 建 者：肖飞
  *   创建日期：2019年10月11日 星期五 16时54分03秒
- *   修改日期：2021年12月29日 星期三 16时48分14秒
+ *   修改日期：2021年12月30日 星期四 13时53分46秒
  *   描    述：
  *
  *================================================================*/
@@ -224,6 +224,7 @@ void app(void const *argument)
 		reset_config = app_info->mechine_info.reset_config;
 
 		if(app_get_reset_config() != 0) {
+			debug("try to reset config!");
 			ret = -1;
 		}
 	} else {
